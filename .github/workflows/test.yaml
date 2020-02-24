@@ -1,0 +1,28 @@
+name: test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.8]
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+          - source "$HOME/.poetry/env"
+      - name: Unit tests
+        run: |
+          pytest --cov=matter tests/

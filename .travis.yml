@@ -5,7 +5,10 @@ dist: xenial
 python:
     - "3.8"
 
-install :
-    - poetry install -v
+before_install:
+  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+  - source "$HOME/.poetry/env"
+
+install: poetry install
 
 script: make test
