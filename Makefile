@@ -20,4 +20,4 @@ lint:
 mypy:
 	mypy $(PROJECT_DIR)
 
-test: lint unit
+test: lint mypy unit
