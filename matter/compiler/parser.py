@@ -73,6 +73,7 @@ class Parser:
         return self._primary()
 
     def _primary(self):
+        # pylint: disable=too-many-return-statements
         if self._match(TokenType.DOT):
             if self._match(TokenType.STAR):
                 return (

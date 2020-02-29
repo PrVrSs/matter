@@ -1,6 +1,5 @@
-import importlib
-import importlib.util
 import pathlib
+from importlib.util import spec_from_file_location, module_from_spec
 from contextlib import suppress
 from operator import methodcaller
 
@@ -19,16 +18,14 @@ def get_extensions(directory: str = '', *, recursive: bool = False):
     files = methodcaller('rglob' if recursive else 'glob', '*.py')
 
     for file in files(path_to_extensions):
-        spec = importlib.util.spec_from_file_location(
-            file.stem, str(file.resolve()))
-
-        module_from_spec = importlib.util.module_from_spec(spec)
+        spec = spec_from_file_location(file.stem, str(file.resolve()))
+        extension_module = module_from_spec(spec)
 
         with suppress(Exception):
-            spec.loader.exec_module(module_from_spec)
+            spec.loader.exec_module(extension_module)  # type: ignore
 
-        if extension := getattr(module_from_spec, EXTENSION_NAME, None):
-            yield extension()
+        if extension := getattr(extension_module, EXTENSION_NAME, None):
+            yield extension()  # pylint: disable=not-callable
 
 
 class ExtensionLoader:

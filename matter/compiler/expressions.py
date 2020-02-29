@@ -1,6 +1,7 @@
 """Antlr4 Expressions"""
-import attr
 from typing import Any
+
+import attr
 
 from .interfaces import AbcExpression
 

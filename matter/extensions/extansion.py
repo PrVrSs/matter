@@ -58,3 +58,4 @@ class BaseExtension(metaclass=MetaExtension):
     def run(self):
         while True:
             print(' '.join(self.builder.build_sentence(start_rule='http_message')))
+            break

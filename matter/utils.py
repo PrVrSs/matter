@@ -4,16 +4,14 @@ import logging.config
 from functools import wraps
 from itertools import chain
 
-import uvloop
-
 from .config import LOGGING_CONFIG
 
 
-def flatmap(function, *iterable):
+def flatmap(function, iterable):
     return chain.from_iterable(map(function, iterable))
 
 
-def set_logging(level):
+def set_logging(_):
     logging.config.dictConfig(LOGGING_CONFIG)
     return logging.getLogger('matte.error')
 
@@ -25,6 +23,7 @@ async def anext(__obj__):
 def async_click(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        import uvloop  # pylint: disable=import-outside-toplevel
         uvloop.install()
         return asyncio.run(func(*args, **kwargs), debug=True)
 

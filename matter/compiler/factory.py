@@ -17,11 +17,13 @@ class Antlr4ParserFacade(AbcParser):
     _rule_pattern = re.compile(r'(?P<rule>\w*\n?\s*):(?P<body>[^\n][^;]*)')
 
     def __init__(self):
-        self._rule_dictionary:  Dict[str, List[AbcExpression]] = {}
+        self._rule_dictionary: Dict[str, List[AbcExpression]] = {}
         # need fix for support:  "SEMI: ';'; "
 
-    async def add_rule_from_file(
-            self, files: str) -> Dict[str, List[AbcExpression]]:
+    async def add_rule_from_file(  # pylint: disable=arguments-differ
+            self,
+            files: str,
+    ) -> Dict[str, List[AbcExpression]]:
         for file in files:
             async for rule in self._read_grammar(file):
                 self._rule_dictionary[self._sanitize_rule(rule[0])] = (
@@ -29,13 +31,13 @@ class Antlr4ParserFacade(AbcParser):
 
         return self._rule_dictionary
 
-    def get_sub_rule_list(
+    def get_sub_rule_list(  # pylint: disable=arguments-differ
             self,
             rule_name: str,
             multiplication_scale: int = 1,
             random_scale: int = 2,
     ) -> Iterator[AbcExpression]:
-        return Ast(
+        return Ast(  # type: ignore
             self._rule_dictionary[rule_name],
             multiplication_scale,
             random_scale,
@@ -66,8 +68,7 @@ class Antlr4ParserFacade(AbcParser):
 
 def setup_parser(parser_type: str) -> AbcParser:
     parser_factory = {
-        ParserType.ANTLR4: lambda: Antlr4ParserFacade()
+        ParserType.ANTLR4: Antlr4ParserFacade
     }
 
     return parser_factory[ParserType(parser_type)]()
-

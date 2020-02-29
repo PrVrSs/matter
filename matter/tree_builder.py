@@ -12,7 +12,7 @@ __all__ = (
 
 class RuleNode:
 
-    __slots__ = '_name', '_children',
+    __slots__ = ('_name', '_children')
 
     def __init__(self, name: str):
         self._name: str = name

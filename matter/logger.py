@@ -6,7 +6,7 @@ import click
 TRACE_LOG_LEVEL = 4
 
 
-class matte_logger:
+class matte_logger:  # pylint: disable=invalid-name
     def __init__(self):
         pass
 
@@ -14,7 +14,7 @@ class matte_logger:
         pass
 
 
-logging_lvl = frozenset((
+logging_lvl = frozenset((  # pylint: disable=invalid-name
     'INFO',
     'ERROR',
     'CRITICAL',

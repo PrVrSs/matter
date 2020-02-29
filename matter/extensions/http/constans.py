@@ -1,4 +1,4 @@
-http_commands = frozenset((
+HTTP_COMMANDS = frozenset((
     'GET',
     'POST',
     'HEAD',
@@ -10,7 +10,7 @@ http_commands = frozenset((
 ))
 
 
-http_headers = frozenset((
+HTTP_HEADERS = frozenset((
     'User-Agent:',
     'Accept:',
     'Accept-Language:',

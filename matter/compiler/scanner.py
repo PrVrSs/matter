@@ -29,6 +29,7 @@ class Scanner:
         return self.tokens
 
     def scan_token(self) -> None:
+        # pylint: disable=too-many-branches
         char: str = self._advance()
         if char == '(':
             self.add_token(TokenType.LEFT_PAREN)
@@ -104,13 +105,13 @@ class Scanner:
     @staticmethod
     def _is_alpha(char: str) -> bool:
         return (
-                (97 <= ord(char) <= 122) or
-                (65 <= ord(char) <= 90) or
-                ord(char) == 95 or
-                (48 <= ord(char) <= 57) or
-                ord(char) == 45 or
-                ord(char) == 36 or
-                ord(char) == 46
+            (97 <= ord(char) <= 122) or
+            (65 <= ord(char) <= 90) or
+            ord(char) == 95 or
+            (48 <= ord(char) <= 57) or
+            ord(char) == 45 or
+            ord(char) == 36 or
+            ord(char) == 46
         )
 
     def _match(self, expected) -> bool:

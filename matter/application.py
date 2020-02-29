@@ -35,13 +35,13 @@ class EventIteratorWrapper(AsyncIterator):
 
 class Application:
 
-    HANDLED_SIGNALS = signal.SIGINT, signal.SIGTERM,
+    HANDLED_SIGNALS = (signal.SIGINT, signal.SIGTERM,)
 
     def __init__(self, loop=None):
         self._loop = loop or asyncio.get_running_loop()
         self._queue = asyncio.Queue(maxsize=15)
 
-        self.should_exit = False
+        self._event = asyncio.Event()
 
     def add_job(self, target, *args) -> None:
         self._loop.call_soon_threadsafe(self.async_add_job, target, *args)
@@ -62,15 +62,13 @@ class Application:
         return task
 
     async def run(self):
-        while True:
-            if self.should_exit:
-                break
+        while not self._event.is_set():
 
             await asyncio.sleep(1)
 
     async def startup(self):
         self.install_signal_handlers()
-        task = self.async_add_job(self.run())
+        self.async_add_job(self.run())
         await asyncio.sleep(1)
 
     async def shutdown(self, sockets=None):
@@ -85,7 +83,7 @@ class Application:
                 signal.signal(sig, self.handle_exit)
 
     def handle_exit(self, sig):
-        logging.error(f'Got signal {sig}')
+        logging.error('Got signal %s', sig)
 
         for task in asyncio.all_tasks(loop=self._loop):
             task.cancel()
@@ -93,4 +91,4 @@ class Application:
         self._loop.remove_signal_handler(signal.SIGTERM)
         self._loop.add_signal_handler(signal.SIGINT, lambda: None)
 
-        self.should_exit = True
+        self._event.set()

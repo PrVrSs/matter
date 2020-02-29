@@ -23,11 +23,11 @@ class SimpleClient:
 
 
 async def main():
-    c = SimpleClient()
-    await c.create_connection()
-    c.send('''''')
+    client = SimpleClient()
+    await client.create_connection()
+    client.send('''''')
 
-    async for data in c.read():
+    async for data in client.read():
         print(data.decode())
 
 if __name__ == '__main__':

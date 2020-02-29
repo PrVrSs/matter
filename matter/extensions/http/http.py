@@ -22,16 +22,16 @@ class HTTPAlgorithm:
     pass
 
 
-target = Path(__file__).parent / 'http.g4'
+HTTP_GRAMMAR = (Path(__file__).parent / 'http.g4').resolve()
 
 
 @final
 class HTTP(BaseExtension):
 
-    __implements__ = Network
-    __mutations_alg__ = HTTPAlgorithm
-    __mutations_scheme__ = HTTPMutation
-    __files__ = str(target.resolve()),
+    __implements__ = Network  # type: ignore
+    __mutations_alg__ = HTTPAlgorithm  # type: ignore
+    __mutations_scheme__ = HTTPMutation  # type: ignore
+    __files__ = (str(HTTP_GRAMMAR),)  # type: ignore
 
     def __init__(self, config):
         super().__init__()

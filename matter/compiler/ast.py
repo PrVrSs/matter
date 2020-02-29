@@ -4,7 +4,6 @@ import random
 from typing import (
     List,
     Optional,
-    Any,
 )
 
 from .expressions import Literal, AbcExpression, Choice
@@ -12,33 +11,30 @@ from .expressions import Literal, AbcExpression, Choice
 
 class Ast:
     """Antlr4 Ast"""
-    __slots__ = (
-        'tree',
-        '_multiplication_scale',
-        '_random_scale',
-        '_default_min_zero',
-        '_default_min_one',
-        '_default_min_or',
-        '_default_max_or'
-    )
+
+    tree: List[AbcExpression]
+    _multiplication_scale: int
+    _random_scale: int
+    _default_min_zero: int
+    _default_min_one: int
+    _default_min_or: int
+    _default_max_or: int
 
     def __new__(
             cls,
             tree_: Optional[List[AbcExpression]] = None,
             multiplication_scale: int = 1,
             random_scale: int = 1,
-            *args: Any,
-            **kwargs: Any,
     ):
         self = super().__new__(cls)
 
-        self.tree: List[AbcExpression] = tree_ or []
-        self._multiplication_scale: int = multiplication_scale
-        self._random_scale: int = random_scale
-        self._default_min_zero: int = 0
-        self._default_min_one: int = 1
-        self._default_min_or: int = 0
-        self._default_max_or: int = 4
+        self.tree = tree_ or []
+        self._multiplication_scale = multiplication_scale
+        self._random_scale = random_scale
+        self._default_min_zero = 0
+        self._default_min_one = 1
+        self._default_min_or = 0
+        self._default_max_or = 4
 
         return self._create_ast()
 
@@ -92,8 +88,8 @@ class Ast:
         )
 
     @staticmethod
-    def visit_tilde(expr: AbcExpression) -> AbcExpression:
-        return Literal(value='\x33')
+    def visit_tilde(_: AbcExpression) -> AbcExpression:
+        return Literal(value='\x33')  # type: ignore
 
     @staticmethod
     def visit_literal(expr) -> AbcExpression:
