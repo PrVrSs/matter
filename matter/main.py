@@ -1,10 +1,13 @@
+import logging
+
 import click
 
 from .application import Application
 from .errors import ERROR_LIST
 from .extensions import ExtensionLoader
-from .logger import logging_lvl
+from .logger import LOG_LEVELS, configure_logging
 from .utils import async_click
+from .config import GREETING
 
 
 class Fuzzer:
@@ -18,11 +21,13 @@ class Fuzzer:
 
 @click.command()
 @click.option('--level', '-l',
-              default='INFO',
-              type=click.Choice(logging_lvl))
+              default='debug',
+              type=click.Choice(LOG_LEVELS.keys()))
 @async_click
 async def main(level):
-    print(level)
+    print(click.style(GREETING, fg='blue', bold=True))
+    configure_logging(level)
+
     try:
         app = Application()
         await app.startup()
@@ -30,8 +35,5 @@ async def main(level):
         await fuzzer.extension.create_builder()
         fuzzer.run()
     except ERROR_LIST as error:
-        print(error)
-
-
-if __name__ == '__main__':
-    main()
+        logging.exception(error)
+        raise click.Abort
